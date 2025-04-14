@@ -8,7 +8,7 @@ pipeline {
   stages {
     stage('Clone repo') {
       when {
-        branch 'main'
+        branch 'dev'
       }
       steps {
         checkout scm
@@ -17,7 +17,7 @@ pipeline {
 
     stage('Build image') {
       when {
-        branch 'main'
+        branch 'dev'
       }
       steps {
         script {
@@ -28,7 +28,7 @@ pipeline {
 
     stage('Push image') {
       when {
-        branch 'main'
+        branch 'dev'
       }
       steps {
         script {
