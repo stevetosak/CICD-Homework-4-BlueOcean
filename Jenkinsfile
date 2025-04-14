@@ -7,12 +7,18 @@ pipeline {
 
   stages {
     stage('Clone repo') {
+      when {
+        branch 'main'
+      }
       steps {
         checkout scm
       }
     }
 
     stage('Build image') {
+      when {
+        branch 'main'
+      }
       steps {
         script {
           app = docker.build("${IMAGE_NAME}")
@@ -21,6 +27,9 @@ pipeline {
     }
 
     stage('Push image') {
+      when {
+        branch 'main'
+      }
       steps {
         script {
           docker.withRegistry('https://registry.hub.docker.com', 'docker') {
