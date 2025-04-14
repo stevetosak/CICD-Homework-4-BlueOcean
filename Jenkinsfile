@@ -1,18 +1,34 @@
-node {
-    def app
+pipeline {
+    agent any
 
-    stage('Clone repo') {
-        checkout scm
+    environment {
+        IMAGE_NAME = "stevetosak/jenkins-blueocean-homework"
     }
 
-    stage('Build image') {
-        app = docker.build("stevetosak/jenkins-blueocean-homework")
-    }
+    stages {
+        stage('Clone repo') {
+            steps {
+                checkout scm
+            }
+        }
 
-    stage('Push image') {
-        docker.withRegistry('https://registry.hub.docker.com', 'docker') {
-            app.push("${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
-            app.push("${env.BRANCH_NAME}-latest")
+        stage('Build image') {
+            steps {
+                script {
+                    app = docker.build("${IMAGE_NAME}")
+                }
+            }
+        }
+
+        stage('Push image') {
+            steps {
+                script {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+                        app.push("${env.BRANCH_NAME}-${env.BUILD_NUMBER}")
+                        app.push("${env.BRANCH_NAME}-latest")
+                    }
+                }
+            }
         }
     }
 }
